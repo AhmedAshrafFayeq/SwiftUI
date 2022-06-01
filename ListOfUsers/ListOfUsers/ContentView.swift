@@ -8,14 +8,32 @@
 import SwiftUI
 
 struct ContentView: View {
+    var users: [User] = []
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        NavigationView {
+            List(users) { user in
+                NavigationLink(destination: Text(user.name)) {
+                    HStack {
+                        Image(systemName: "photo")
+                        VStack(alignment: .leading) {
+                            Text(user.name)
+                            Text("\(user.capacity)")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(Text("Users"))
+        }
     }
 }
 
+#if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(users: testData)
     }
 }
+#endif
