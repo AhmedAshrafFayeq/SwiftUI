@@ -13,17 +13,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List(users) { user in
-                NavigationLink(destination: Text(user.name)) {
-                    HStack {
-                        Image(systemName: "photo")
-                        VStack(alignment: .leading) {
-                            Text(user.name)
-                            Text("\(user.capacity)")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
+                UserCell(user: user)
             }
             .navigationTitle(Text("Users"))
         }
@@ -37,3 +27,20 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 #endif
+
+struct UserCell: View {
+    let user: User
+    var body: some View {
+        NavigationLink(destination: Text(user.name)) {
+            HStack {
+                Image(systemName: "photo")
+                VStack(alignment: .leading) {
+                    Text(user.name)
+                    Text("\(user.capacity)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+    }
+}
