@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct MovieView: View {
     
     let movies: [Movie]
     
-    var body: some View {
+    var body: some View { 
         List(movies) { movie in
             HStack{
                 AsyncImage(url: movie.posterURL) { image in
@@ -30,8 +30,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct MovieView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(movies: .mock)
+        MovieView(movies: .mock)
     }
 }
