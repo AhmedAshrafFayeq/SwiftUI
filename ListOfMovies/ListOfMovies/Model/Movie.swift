@@ -11,7 +11,7 @@ struct MoviesResponse: Decodable {
     let results: [Movie]
 }
 
-struct Movie: Identifiable {
+struct Movie: Decodable, Identifiable {
     let id: Int
     let title: String
     let overview: String
