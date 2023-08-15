@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct MoviesResponse: Decodable {
+    let results: [Movie]
+}
+
 struct Movie: Identifiable {
     let id: Int
     let title: String
