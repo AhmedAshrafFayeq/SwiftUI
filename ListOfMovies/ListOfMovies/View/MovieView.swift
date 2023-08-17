@@ -9,13 +9,15 @@ import SwiftUI
 
 struct MovieView: View {
     
-    let movies: [Movie]
+    @State var movies: [Movie] = []
     
     var body: some View { 
         List(movies) { movie in
             HStack{
                 AsyncImage(url: movie.posterURL) { image in
-                    image.resizable().aspectRatio(contentMode: .fit)
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
                 } placeholder: {
                     ProgressView()
                 }.frame(width: 80)
@@ -27,11 +29,19 @@ struct MovieView: View {
             }
             .padding()
         }
+        .task {
+            do {
+                let service = MoviesService()
+                movies = try await service.getMovies()
+            }catch {
+                print(error)
+            }
+        }
     }
 }
 
 struct MovieView_Previews: PreviewProvider {
     static var previews: some View {
-        MovieView(movies: .mock)
+        MovieView()
     }
 }
