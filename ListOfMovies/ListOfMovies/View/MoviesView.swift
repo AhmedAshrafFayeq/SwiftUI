@@ -7,12 +7,13 @@
 
 import SwiftUI
 
-struct MovieView: View {
+struct MoviesView: View {
     
-    @State var movies: [Movie] = []
+    // to listen to any change in viewModel data
+    @StateObject var viewModel = MoviesViewModel()
     
     var body: some View { 
-        List(movies) { movie in
+        List(viewModel.movies) { movie in
             HStack{
                 AsyncImage(url: movie.posterURL) { image in
                     image
@@ -30,18 +31,13 @@ struct MovieView: View {
             .padding()
         }
         .task {
-            do {
-                let service = MoviesService()
-                movies = try await service.getMovies()
-            }catch {
-                print(error)
-            }
+            await viewModel.loadMovies()
         }
     }
 }
 
 struct MovieView_Previews: PreviewProvider {
     static var previews: some View {
-        MovieView()
+        MoviesView()
     }
 }
