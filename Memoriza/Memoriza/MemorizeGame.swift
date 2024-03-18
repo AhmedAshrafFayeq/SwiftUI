@@ -19,19 +19,43 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         }
     }
     
-    mutating func choose(_ card: Card) {
-        let choosenIndex = index(of: card)
-        cards[choosenIndex].isFaceUp.toggle()
-        print(card)
-    }
-    
-    func index(of card: Card)-> Int {
-        for index in cards.indices {
-            if cards[index].id == card.id {
-                return index
+    var indexOfTheOneAndOnlyFaceUpCard: Int? {
+        get {
+            var faceUpCardIndices = [Int]()
+            for index in cards.indices {
+                if cards[index].isFaceUp {
+                    faceUpCardIndices.append(index)
+                }
+            }
+            if faceUpCardIndices.count == 1 {
+                return faceUpCardIndices.first
+            } else {
+                return nil
             }
         }
-        return 0 // FIXME: bug!
+        set {
+            
+        }
+    }
+    
+    mutating func choose(_ card: Card) {
+        if let choosenIndex = cards.firstIndex(where: { $0.id == card.id }) {
+            if !cards[choosenIndex].isFaceUp && !cards[choosenIndex].isMatched {
+                if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+                    if cards[choosenIndex].content == cards[potentialMatchIndex].content {
+                        cards[choosenIndex].isMatched = true
+                        cards[potentialMatchIndex].isMatched = true
+                    }
+                    indexOfTheOneAndOnlyFaceUpCard = nil
+                } else {
+                    for index in cards.indices {
+                        cards[index].isFaceUp = false
+                    }
+                    indexOfTheOneAndOnlyFaceUpCard = choosenIndex
+                }
+                cards[choosenIndex].isFaceUp = true
+            }
+        }
     }
     
     mutating func shuffle() {
@@ -39,7 +63,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     struct Card: Equatable, Identifiable, CustomDebugStringConvertible {
-        var isFaceUp = true
+        var isFaceUp = false
         var isMatched = false
         let content: CardContent
         
